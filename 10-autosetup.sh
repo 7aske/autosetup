@@ -15,8 +15,8 @@ git -C $home/Code/sh clone https://github.com/7aske/utils-sh
 ln -sf $home/.scripts $home/sh/utils-sh
 git -C $home/Code/sh clone https://github.com/7aske/bashrc
 git -C $home/Code/sh clone https://github.com/7aske/dotfiles
-git -C $home/Code/sh checkout nik-mjr
-git -C $home/Code/sh checkout pull
+git -C $home/Code/sh/dotfiles checkout nik-mjr
+git -C $home/Code/sh/dotfiles checkout pull
 
 bash $home/Code/sh/bashrc/update_bashrc.sh &
 
@@ -50,6 +50,7 @@ yes | pacman -S tree --needed
 yes | pacman -S conky --needed
 yes | pacman -S curl --needed
 yes | pacman -S wget --needed
+yes | pacman -S plank --needed
 
 yes | pacman -S matcha-gtk-theme --needed
 yes | pacman -S papirus-icon-theme --needed
