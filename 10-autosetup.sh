@@ -52,8 +52,8 @@ yes | pacman -S curl --needed
 yes | pacman -S wget --needed
 yes | pacman -S plank --needed
 yes | pacman -S python-pywal --needed
+yes | pacman -S xclip --needed
 
-yes | pacman -S matcha-gtk-theme --needed
 yes | pacman -S papirus-icon-theme --needed
 yes | pacman -Rcns manjaro-hello
 
