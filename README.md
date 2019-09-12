@@ -23,6 +23,7 @@ Few semi-automated scripts to install all my preferred applications and copy ove
     * npm
     * yay
     * plank
+    * pywal
 
 * Packages:
     * go
