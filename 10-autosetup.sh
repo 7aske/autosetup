@@ -22,14 +22,12 @@ bash $home/Code/sh/bashrc/update_bashrc.sh &
 
 mkdir -p $home/Downloads
 
-git -C $home/Downloads clone https://aur.archlinux.org/yay.git
-
 sed -i "s/^#Color/Color" /etc/pacman.conf
-
-yes | pacman -S yay --needed
 
 yes | pacman -S ttf-ubuntu-font-family --needed
 yes | pacman -S ttf-fira-code --needed
+yes | pacman -S noto-fonts --needed
+yes | pacman -S ttf-liberation --needed
 
 ln -sf $home/Code/sh/dotfiles/conky/.conkyrc $home/.conkyrc
 ln -sf $home/Code/sh/dotfiles/conky/.conkycolors $home/.conkycolors
@@ -53,6 +51,8 @@ yes | pacman -S wget --needed
 yes | pacman -S plank --needed
 yes | pacman -S python-pywal --needed
 yes | pacman -S xclip --needed
+yes | pacman -S samba --needed
+yes | pacman -S nautilus --needed
 
 yes | pacman -S papirus-icon-theme --needed
 yes | pacman -Rcns manjaro-hello

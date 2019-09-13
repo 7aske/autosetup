@@ -3,6 +3,7 @@ if [[ $EUID -eq 0 ]]; then
     exit 1
 fi
 
+yes '' | yay -S barier --needed
 yes '' | yay -S xcursor-breeze --needed
 yes '' | yay -S jetbrains-toolbox --needed
 yes '' | yay -S google-chrome --needed
