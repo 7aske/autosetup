@@ -46,6 +46,7 @@ yes | pacman -S vim --needed
 yes | pacman -S neofetch --needed
 yes | pacman -S tree --needed
 yes | pacman -S conky --needed
+yes | pacman -S net-tools --needed
 yes | pacman -S curl --needed
 yes | pacman -S wget --needed
 yes | pacman -S plank --needed
