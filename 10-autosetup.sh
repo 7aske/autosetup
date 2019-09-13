@@ -49,10 +49,16 @@ yes | pacman -S conky --needed
 yes | pacman -S curl --needed
 yes | pacman -S wget --needed
 yes | pacman -S plank --needed
+yes | pacman -S baobab --needed
 yes | pacman -S python-pywal --needed
 yes | pacman -S xclip --needed
 yes | pacman -S samba --needed
 yes | pacman -S nautilus --needed
+yes | pacman -S openssh --needed
+yes | pacman -S gvfs --needed
+yes | pacman -S gvfs-smb --needed
+
+systemctl enable sshd
 
 yes | pacman -S papirus-icon-theme --needed
 yes | pacman -Rcns manjaro-hello
