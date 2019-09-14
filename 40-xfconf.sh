@@ -1,6 +1,7 @@
-if [[ $EUID -eq 0 ]]; then
-    echo "Do not run as root"
-    exit 1
+#!/bin/sh
+
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Do not run as root"; exit 1;
 fi
 
 xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "Breeze_Snow"
