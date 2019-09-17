@@ -21,13 +21,17 @@ git -C "$HOME"/Code/sh/dotfiles checkout pull
 
 bash "$HOME"/Code/sh/bashrc/update_bashrc.sh &
 
-ln -sf "$HOME"/Code/sh/dotfiles/conky/.conkyrc "$HOME"/.conkyrc
+ln -sf "$HOME"/Code/sh/dotfiles/conky "$HOME"/.config/conky
 
 cp -rf "$HOME"/Code/sh/dotfiles/xfce4 "$HOME"/.config/
-cp -rf "$HOME"/Code/sh/dotfiles/albert "$HOME"/.config/
-cp -rf "$HOME"/Code/sh/dotfiles/VSCodium "$HOME"/.config/
+ln -sf "$HOME"/Code/sh/dotfiles/albert "$HOME"/.config/albert
+
+mkdir -p "$HOME"/.config/VSCodium/User
+ln -sf "$HOME"/Code/sh/dotfiles/VSCodium/User/settings.json "$HOME"/.config/VSCodium/User/settings.json
+ln -sf "$HOME"/Code/sh/dotfiles/VSCodium/User/keybindings.json "$HOME"/.config/VSCodium/User/keybindings.json
+
 ln -sf "$HOME"/Code/sh/dotfiles/neofetch "$HOME"/.config/neofetch
-cp -rf "$HOME"/Code/sh/dotfiles/kitty "$HOME"/.config/
+ln -sf "$HOME"/Code/sh/dotfiles/kitty "$HOME"/.config/kitty
 ln -sf "$HOME"/Code/sh/dotfiles/vim/.vim "$HOME"/.vim/
 ln -sf "$HOME"/Code/sh/dotfiles/vim/.vimrc "$HOME"/.vimrc
 
