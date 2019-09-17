@@ -13,7 +13,7 @@ git -C "$HOME"/Downloads clone https://aur.archlinux.org/yay.git && "$HOME"/Down
 mkdir -p "$HOME"/Code/sh
 
 git -C "$HOME"/Code/sh clone https://github.com/7aske/utils-sh
-ln -sf "$HOME"/.scripts "$HOME"/sh/utils-sh
+ln -sf "$HOME"/.scripts "$HOME"/Code/sh/utils-sh
 git -C "$HOME"/Code/sh clone https://github.com/7aske/bashrc
 git -C "$HOME"/Code/sh clone https://github.com/7aske/dotfiles
 git -C "$HOME"/Code/sh/dotfiles checkout nik-mjr
