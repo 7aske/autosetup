@@ -85,4 +85,8 @@ Automated script to install all my preferred applications and copy over configur
 `vscodium-bin`\
 `pa-applet-git`\
 `pamac-aur`\
-`nordic-theme-git`
+`nordic-theme-git`\
+`mariadb`\
+`mongodb-bin`\
+`mongodb-compass`\
+`postman`

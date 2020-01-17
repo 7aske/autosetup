@@ -110,6 +110,7 @@ yes | sudo pacman -S lxappearance --needed
 yes | sudo pacman -S htop --needed
 yes | sudo pacman -S iostat --needed
 yes | sudo pacman -S materia-gtk-theme --needed
+yes | sudo pacman -S mariadb --needed
 
 yes '' | sudo pacman -S xorg --needed
 yes '' | sudo pacman -S xorg-xinit --needed
@@ -152,3 +153,6 @@ yes '' | yay -S vscodium-bin --needed
 yes '' | yay -S pa-applet-git --needed
 yes '' | yay -S pamac-aur --needed
 yes '' | yay -S nordic-theme-git --needed
+yes '' | yay -S mongodb-bin --needed
+yes '' | yay -S mongodb-compass --needed
+yes '' | yay -S postman --needed
