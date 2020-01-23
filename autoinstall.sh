@@ -129,7 +129,10 @@ yes '' | sudo pacman -S xorg --needed
 yes '' | sudo pacman -S xorg-xinit --needed
 yes '' | sudo pacman -S lightdm-gtk-greeter --needed
 yes '' | sudo pacman -S lightdm-gtk-greeter-settings --needed
-echo "pgrep i3 || exec i3" >"$HOME"/.xinitrc
+
+echo "[ -f "\$HOME"/.profile ] && . "\$HOME"/.profile" >"$HOME"/.xinitrc
+echo "[ -f "\$HOME"/.Xresources] && xrdb -merge "\$HOME"/.Xresources" >>"$HOME"/.xinitrc
+echo "pgrep i3 || exec i3" >>"$HOME"/.xinitrc
 
 sudo systemctl enable sshd
 
