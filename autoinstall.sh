@@ -42,6 +42,18 @@ mkdir -p "$HOME"/.config/VSCode/User
 [ ! -e "$HOME"/.config/dunst ] && ln -sf "$HOME"/Code/sh/dotfiles/dunst "$HOME"/.config/dunst
 [ ! -e "$HOME"/.config/conky ] && ln -sf "$HOME"/Code/sh/dotfiles/conky "$HOME"/.config/conky
 
+
+echo "export EDITOR=/usr/bin/nvim" >> "$HOME"/.profile
+echo "export BROWSER=/usr/bin/chromium" >> "$HOME"/.profile
+echo "export FILE=/usr/bin/thunar" >> "$HOME"/.profile
+echo "export READER=/usr/bin/zathura" >> "$HOME"/.profile
+
+echo "export PATH="\$PATH":"\$HOME"/.scripts" >> "$HOME"/.profile
+echo "export PATH="\$PATH":"\$HOME"/Code/py/utils-py" >> "$HOME"/.profile
+echo "export PATH="\$PATH":"\$HOME"/.local/bin" >> "$HOME"/.profile
+echo "export PATH="\$PATH":"\$HOME"/.cargo/bin" >> "$HOME"/.profile
+echo "export GOPATH="$HOME"/.go" >> "$HOME"/.profile
+
 cp "$HOME"/Code/sh/dotfiles/.Xresources "$HOME"/
 xrdb -merge ~/.Xresources
 
@@ -63,6 +75,7 @@ yes | sudo pacman -S rofi --needed
 yes | sudo pacman -S dmenu --needed
 yes | sudo pacman -S fzf --needed
 yes | sudo pacman -S neovim --needed
+sudo ln -sf /usr/bin/nvim /usr/bin/vim
 yes | sudo pacman -S tigervnc --needed
 yes | sudo pacman -S neofetch --needed
 yes | sudo pacman -S tree --needed
