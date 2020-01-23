@@ -52,7 +52,7 @@ echo "export PATH="\$PATH":"\$HOME"/.scripts" >> "$HOME"/.profile
 echo "export PATH="\$PATH":"\$HOME"/Code/py/utils-py" >> "$HOME"/.profile
 echo "export PATH="\$PATH":"\$HOME"/.local/bin" >> "$HOME"/.profile
 echo "export PATH="\$PATH":"\$HOME"/.cargo/bin" >> "$HOME"/.profile
-echo "export GOPATH="$HOME"/.go" >> "$HOME"/.profile
+echo "export GOPATH="\$HOME"/.go" >> "$HOME"/.profile
 
 cp "$HOME"/Code/sh/dotfiles/.Xresources "$HOME"/
 xrdb -merge ~/.Xresources
