@@ -45,11 +45,11 @@ mkdir -p "$HOME"/.config/VSCode/User
 cp "$HOME"/Code/sh/dotfiles/.Xresources "$HOME"/
 xrdb -merge ~/.Xresources
 
-yes | sudo pacman -Syyu
-
 sudo sed -i "s/^#Color/Color" /etc/pacman.conf
 sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 sudo sed -i "/\[cummunity\]/,/Include/"'s/^#//' /etc/pacman.conf
+
+yes | sudo pacman -Syyu
 
 yes | sudo pacman -S ttf-ubuntu-font-family --needed
 yes | sudo pacman -S ttf-fira-code --needed
