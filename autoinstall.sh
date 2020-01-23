@@ -19,7 +19,7 @@ mkdir -p "$HOME"/.config
 git -C "$HOME"/Code/sh clone https://github.com/7aske/utils-sh
 git -C "$HOME"/Code/sh clone https://github.com/7aske/bashrc
 git -C "$HOME"/Code/sh clone https://github.com/7aske/dotfiles
-[ -f "$HOME"/Code/sh/utils-sh ] || ln -sf "$HOME"/.scripts "$HOME"/Code/sh/utils-sh
+[ ! -e "$HOME"/Code/sh/utils-sh ] && ln -sf "$HOME"/.scripts "$HOME"/Code/sh/utils-sh
 
 bash "$HOME"/Code/sh/bashrc/update_bashrc.sh &
 
