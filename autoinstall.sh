@@ -25,22 +25,22 @@ bash "$HOME"/Code/sh/bashrc/update_bashrc.sh &
 
 mkdir -p "$HOME"/.config/VSCodium/User
 mkdir -p "$HOME"/.config/VSCode/User
-[ -f "$HOME"/.config/VSCodium/User/settings.json ] || ln -sf "$HOME"/Code/sh/dotfiles/VSCodium/User/settings.json "$HOME"/.config/VSCodium/User/settings.json
-[ -f "$HOME"/.config/VSCode/User/settings.json ] || ln -sf "$HOME"/Code/sh/dotfiles/VSCode/User/settings.json "$HOME"/.config/VSCode/User/settings.json
-[ -f "$HOME"/.config/VSCodium/User/keybindings.json ] || ln -sf "$HOME"/Code/sh/dotfiles/VSCodium/User/keybindings.json "$HOME"/.config/VSCodium/User/keybindings.json
-[ -f "$HOME"/.config/VSCode/User/keybindings.json ] || ln -sf "$HOME"/Code/sh/dotfiles/VSCode/User/keybindings.json "$HOME"/.config/VSCode/User/keybindings.json
+[ ! -e "$HOME"/.config/VSCodium/User/settings.json ] && ln -sf "$HOME"/Code/sh/dotfiles/VSCodium/User/settings.json "$HOME"/.config/VSCodium/User/settings.json
+[ ! -e "$HOME"/.config/VSCode/User/settings.json ] && ln -sf "$HOME"/Code/sh/dotfiles/VSCode/User/settings.json "$HOME"/.config/VSCode/User/settings.json
+[ ! -e "$HOME"/.config/VSCodium/User/keybindings.json ] && ln -sf "$HOME"/Code/sh/dotfiles/VSCodium/User/keybindings.json "$HOME"/.config/VSCodium/User/keybindings.json
+[ ! -e "$HOME"/.config/VSCode/User/keybindings.json ] && ln -sf "$HOME"/Code/sh/dotfiles/VSCode/User/keybindings.json "$HOME"/.config/VSCode/User/keybindings.json
 
-[ -f "$HOME"/.config/albert ] || ln -sf "$HOME"/Code/sh/dotfiles/albert "$HOME"/.config/albert
-[ -f "$HOME"/.config/neofetch ] || ln -sf "$HOME"/Code/sh/dotfiles/neofetch "$HOME"/.config/neofetch
-[ -f "$HOME"/.config/kitty ] || ln -sf "$HOME"/Code/sh/dotfiles/kitty "$HOME"/.config/kitty
-[ -f "$HOME"/.config/nvim ] || ln -sf "$HOME"/Code/sh/dotfiles/nvim "$HOME"/.config/nvim
-[ -f "$HOME"/.config/rofi ] || ln -sf "$HOME"/Code/sh/dotfiles/rofi "$HOME"/.config/rofi
-[ -f "$HOME"/.config/tmux ] || ln -sf "$HOME"/Code/sh/dotfiles/tmux "$HOME"/.config/tmux
-[ -f "$HOME"/.config/i3 ] || ln -sf "$HOME"/Code/sh/dotfiles/i3 "$HOME"/.config/i3
-[ -f "$HOME"/.config/i3blocks ] || ln -sf "$HOME"/Code/sh/dotfiles/i3blocks "$HOME"/.config/i3blocks
-[ -f "$HOME"/.config/i3status ] || ln -sf "$HOME"/Code/sh/dotfiles/i3status "$HOME"/.config/i3status
-[ -f "$HOME"/.config/dunst ] || ln -sf "$HOME"/Code/sh/dotfiles/dunst "$HOME"/.config/dunst
-[ -f "$HOME"/.config/conky ] || ln -sf "$HOME"/Code/sh/dotfiles/conky "$HOME"/.config/conky
+[ ! -e "$HOME"/.config/albert ] && ln -sf "$HOME"/Code/sh/dotfiles/albert "$HOME"/.config/albert
+[ ! -e "$HOME"/.config/neofetch ] && ln -sf "$HOME"/Code/sh/dotfiles/neofetch "$HOME"/.config/neofetch
+[ ! -e "$HOME"/.config/kitty ] && ln -sf "$HOME"/Code/sh/dotfiles/kitty "$HOME"/.config/kitty
+[ ! -e "$HOME"/.config/nvim ] && ln -sf "$HOME"/Code/sh/dotfiles/nvim "$HOME"/.config/nvim
+[ ! -e "$HOME"/.config/rofi ] && ln -sf "$HOME"/Code/sh/dotfiles/rofi "$HOME"/.config/rofi
+[ ! -e "$HOME"/.config/tmux ] && ln -sf "$HOME"/Code/sh/dotfiles/tmux "$HOME"/.config/tmux
+[ ! -e "$HOME"/.config/i3 ] && ln -sf "$HOME"/Code/sh/dotfiles/i3 "$HOME"/.config/i3
+[ ! -e "$HOME"/.config/i3blocks ] && ln -sf "$HOME"/Code/sh/dotfiles/i3blocks "$HOME"/.config/i3blocks
+[ ! -e "$HOME"/.config/i3status ] && ln -sf "$HOME"/Code/sh/dotfiles/i3status "$HOME"/.config/i3status
+[ ! -e "$HOME"/.config/dunst ] && ln -sf "$HOME"/Code/sh/dotfiles/dunst "$HOME"/.config/dunst
+[ ! -e "$HOME"/.config/conky ] && ln -sf "$HOME"/Code/sh/dotfiles/conky "$HOME"/.config/conky
 
 cp "$HOME"/Code/sh/dotfiles/.Xresources "$HOME"/
 xrdb -merge ~/.Xresources
