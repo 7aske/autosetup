@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Do not run as root"
+    exit 1
+fi
+
 # TOOLCHAINS AND COMPILERS
 #yes '' | sudo pacman -S jdk8-openjdk --needed
 #yes '' | sudo pacman -S java8-openjfx --needed
