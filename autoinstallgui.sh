@@ -38,7 +38,14 @@ yes '' | sudo pacman -S pa-applet --needed
 yes '' | yay -S pa-applet-git --needed
 yes '' | yay -S pamac-aur --needed
 
-# NETOWORK
+# i3_alternating layout
+TMP_DIR=/tmp/i3-alternating-layout
+AL_DIR="$HOME"/.local/bin
+git -C /tmp clone "https://github.com/olemartinorg/i3-alternating-layout" && cp "$TMP_DIR"/alternating_layouts.py "$AL_DIR"/alternating_layouts && rm -rf "$TMP_DIR"
+yes '' | yay -S python-i3-py --needed
+yes '' | sudo pacman -S xorg-util-macros --needed
+
+# NETWORK
 yes '' | sudo pacman -S tigervnc --needed
 
 # Setup .xinitrc
