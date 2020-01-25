@@ -21,7 +21,7 @@ mkdir -p "$HOME"/.config
 git -C "$HOME"/Code/sh clone https://github.com/7aske/utils-sh
 git -C "$HOME"/Code/sh clone https://github.com/7aske/bashrc
 git -C "$HOME"/Code/sh clone https://github.com/7aske/dotfiles
-[ ! -e "$HOME"/.scripts ] && ln -sf "$HOME"/.scripts "$HOME"/Code/sh/utils-sh
+[ ! -e "$HOME"/.scripts ] && ln -sf "$HOME"/Code/sh/utils-sh "$HOME"/.scripts
 
 # Set ~/.bashrc to source ~/Code/sh/bashrc/.bashrc
 bash "$HOME"/Code/sh/bashrc/bashrc.sh &
