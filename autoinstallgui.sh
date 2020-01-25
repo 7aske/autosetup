@@ -41,6 +41,7 @@ yes '' | yay -S pamac-aur --needed
 # i3_alternating layout
 TMP_DIR=/tmp/i3-alternating-layout
 AL_DIR="$HOME"/.local/bin
+[ -d "$AL_DIR" ] || mkdir -p "$AL_DIR"
 git -C /tmp clone "https://github.com/olemartinorg/i3-alternating-layout" && cp "$TMP_DIR"/alternating_layouts.py "$AL_DIR"/alternating_layouts && rm -rf "$TMP_DIR"
 yes '' | yay -S python-i3-py --needed
 yes '' | sudo pacman -S xorg-util-macros --needed
