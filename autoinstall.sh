@@ -5,15 +5,14 @@ if [ "$(id -u)" -eq 0 ]; then
     exit 1
 fi
 
-if ! [ -x "$(command -v git)" ]; then
+if [ ! -x "$(command -v git)" ]; then
     echo "Git not found - installing"
     sudo pacman -S git
 fi
 
 YAY_DIR="/tmp/yay"
 
-git -C /tmp clone https://aur.archlinux.org/yay.git && cd "$YAY_DIR" && yes | makepkg -sir
-rm -rf $YAY_DIR
+[ ! -x "$(command -v yay)" ] && git -C /tmp clone https://aur.archlinux.org/yay.git && cd "$YAY_DIR" && yes | makepkg -sir && rm -rf $YAY_DIR
 
 mkdir -p "$HOME"/Code/sh
 mkdir -p "$HOME"/.config
@@ -25,7 +24,7 @@ git -C "$HOME"/Code/sh clone https://github.com/7aske/dotfiles
 [ ! -e "$HOME"/Code/sh/utils-sh ] && ln -sf "$HOME"/.scripts "$HOME"/Code/sh/utils-sh
 
 # Set ~/.bashrc to source ~/Code/sh/bashrc/.bashrc
-bash "$HOME"/Code/sh/bashrc/update_bashrc.sh &
+bash "$HOME"/Code/sh/bashrc/bashrc.sh &
 
 # Setup links to respective dotfiles into .config
 mkdir -p "$HOME"/.config/VSCodium/User
@@ -47,23 +46,35 @@ mkdir -p "$HOME"/.config/VSCode/User
 [ ! -e "$HOME"/.config/conky ] && ln -sf "$HOME"/Code/sh/dotfiles/conky "$HOME"/.config/conky
 
 # Setup PATH and other .profile variables
-echo "export EDITOR=/usr/bin/nvim" >>"$HOME"/.profile
-echo "export BROWSER=/usr/bin/chromium" >>"$HOME"/.profile
-echo "export FILE=/usr/bin/thunar" >>"$HOME"/.profile
-echo "export READER=/usr/bin/zathura" >>"$HOME"/.profile
+PROFILE="$HOME"/.profile
 
-echo "export PATH=\"\$PATH\":\"\$HOME\"/.scripts" >>"$HOME"/.profile
-echo "export PATH=\"\$PATH\":\"\$HOME\"/Code/py/utils-py" >>"$HOME"/.profile
-echo "export PATH=\"\$PATH\":\"\$HOME\"/.local/bin" >>"$HOME"/.profile
-echo "export PATH=\"\$PATH\":\"\$HOME\"/.cargo/bin" >>"$HOME"/.profile
-echo "export GOPATH=\"\$HOME\"/.go" >>"$HOME"/.profile
+EDITOR_VAR="export EDITOR=/usr/bin/nvim"
+BROWSER_VAR="export BROWSER=/usr/bin/chromium"
+FILE_VAR="export FILE=/usr/bin/thunar"
+READER_VAR="export READER=/usr/bin/zathura"
+
+SCRIPTS="export PATH=\"\$PATH\":\"\$HOME\"/.scripts"
+UTILS_PY="export PATH=\"\$PATH\":\"\$HOME\"/Code/py/utils-py"
+LOCAL_BIN="export PATH=\"\$PATH\":\"\$HOME\"/.local/bin"
+CARGO_BIN="export PATH=\"\$PATH\":\"\$HOME\"/.cargo/bin"
+GO_PATH="export GOPATH=\"\$HOME\"/.go"
+
+if ! grep -q "$EDITOR_VAR" "$PROFILE"; then echo "$EDITOR_VAR" >>"$PROFILE"; fi
+if ! grep -q "$BROWSER_VAR" "$PROFILE"; then echo "$BROWSER_VAR" >>"$PROFILE"; fi
+if ! grep -q "$FILE_VAR" "$PROFILE"; then echo "$FILE_VAR" >>"$PROFILE"; fi
+if ! grep -q "$READER_VAR" "$PROFILE"; then echo "$READER_VAR" >>"$PROFILE"; fi
+
+if ! grep -q "$SCRIPTS" "$PROFILE"; then echo "$SCRIPTS" >>"$PROFILE"; fi
+if ! grep -q "$UTILS_PY" "$PROFILE"; then echo "$UTILS_PY" >>"$PROFILE"; fi
+if ! grep -q "$LOCAL_BIN" "$PROFILE"; then echo "$LOCAL_BIN" >>"$PROFILE"; fi
+if ! grep -q "$CARGO_BIN" "$PROFILE"; then echo "$CARGO_BIN" >>"$PROFILE"; fi
+if ! grep -q "$GO_PATH" "$PROFILE"; then echo "$GO_PATH" >>"$PROFILE"; fi
 
 # Set terminal colors from ~/.Xresources
 cp "$HOME"/Code/sh/dotfiles/.Xresources "$HOME"/
-xrdb -merge ~/.Xresources
 
 # Enable pacman colors in terminal and enable multilib and comunity repositories
-sudo sed -i "s/^#Color/Color" /etc/pacman.conf
+sudo sed -i "s/^#Color/Color/" /etc/pacman.conf
 sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 sudo sed -i "/\[cummunity\]/,/Include/"'s/^#//' /etc/pacman.conf
 
@@ -101,4 +112,3 @@ yes '' | sudo pacman -S sysstat --needed
 
 # FILE BROWSER
 yes '' | sudo pacman -S ranger --needed
-
