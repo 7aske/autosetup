@@ -38,6 +38,7 @@ mkdir -p "$HOME"/.config/VSCode/User
 [ ! -e "$HOME"/.config/kitty ] && ln -sf "$HOME"/Code/sh/dotfiles/kitty "$HOME"/.config/kitty
 [ ! -e "$HOME"/.config/nvim ] && ln -sf "$HOME"/Code/sh/dotfiles/nvim "$HOME"/.config/nvim
 [ ! -e "$HOME"/.config/rofi ] && ln -sf "$HOME"/Code/sh/dotfiles/rofi "$HOME"/.config/rofi
+[ ! -e "$HOME"/.config/wal ] && ln -sf "$HOME"/Code/sh/dotfiles/wal "$HOME"/.config/wal
 [ ! -e "$HOME"/.config/tmux ] && ln -sf "$HOME"/Code/sh/dotfiles/tmux "$HOME"/.config/tmux
 [ ! -e "$HOME"/.config/i3 ] && ln -sf "$HOME"/Code/sh/dotfiles/i3 "$HOME"/.config/i3
 [ ! -e "$HOME"/.config/i3blocks ] && ln -sf "$HOME"/Code/sh/dotfiles/i3blocks "$HOME"/.config/i3blocks

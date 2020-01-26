@@ -20,7 +20,6 @@ yes '' | sudo pacman -S dunst --needed
 yes '' | sudo pacman -S scrot --needed
 yes '' | sudo pacman -S maim --needed
 yes '' | sudo pacman -S rofi --needed
-git -C /tmp clone https://github.com/davatorium/rofi-themes && sudo cp /tmp/rofi-themes/User\ Themes/onedark.rasi /usr/share/rofi/themes/ && rm -rf /tmp/rofi-themes
 yes '' | sudo pacman -S dmenu --needed
 yes '' | sudo pacman -S fzf --needed
 yes '' | sudo pacman -S xautolock --needed
