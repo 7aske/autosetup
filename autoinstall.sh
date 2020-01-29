@@ -48,8 +48,8 @@ config_package_manager() {
 
     case "$PKG_MAN" in
     "apt")
-        PKG_INST="apt install -qq"
-        PKG_INST_EXTRA="snap install -qq --classic"
+        PKG_INST="apt -qq install"
+        PKG_INST_EXTRA="snap install --classic"
         ;;
     "pacman")
         PKG_INST="pacman --noconfirm -Sq"
@@ -131,16 +131,17 @@ config_deb() {
 }
 
 config_dotfiles() {
-    echo -e "\e[32mSettingup dotfiles\e[0m"
+    echo -e "\e[32mSetting up dotfiles\e[0m"
     [ ! -d "$HOME/Code/sh" ] && mkdir -p "$HOME/Code/sh"
     [ ! -d "$HOME/.config" ] && mkdir -p "$HOME/.config"
 
     # Clone all personal repositories
-    git -C "$HOME/Code/sh" clone "https://github.com/7aske/utils-sh"
-    git -C "$HOME/Code/sh" clone "https://github.com/7aske/bashrc"
-    git -C "$HOME/Code/sh" clone "https://github.com/7aske/dotfiles"
-    [ ! -e "$HOME/.pyscripts" ] && [ -d "$HOME/Code/sh/utils-py" ] && ln -sf "$HOME/Code/sh/utils-py" "$HOME/.pyscripts"
-    [ ! -e "$HOME/.scripts" ] && [ -d "$HOME/Code/sh/utils-sh" ] && ln -sf "$HOME/Code/py/utils-sh" "$HOME/.scripts"
+    [ ! -e "$HOME/Code/sh/utils-sh" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/utils-sh"
+    [ ! -e "$HOME/Code/py/utils-py" ] && git -C "$HOME/Code/py" clone "https://github.com/7aske/utils-py"
+    [ ! -e "$HOME/.pyscripts" ] && [ -d "$HOME/Code/py/utils-py" ] && ln -sf "$HOME/Code/py/utils-py" "$HOME/.pyscripts"
+    [ ! -e "$HOME/.scripts" ] && [ -d "$HOME/Code/sh/utils-sh" ] && ln -sf "$HOME/Code/sh/utils-sh" "$HOME/.scripts"
+    [ ! -e "$HOME/Code/sh/bashrc" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/bashrc"
+    [ ! -e "$HOME/Code/sh/dotfiles" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/dotfiles"
 
     # Set ~/.bashrc to source ~/Code/sh/bashrc/.bashrc
     bash "$HOME/Code/sh/bashrc/bashrc.sh"
@@ -204,7 +205,7 @@ config_profile() {
 #  \_\ |_| /_/   \_\____|_|\_\/_/   \_\____|_____|____/  /_/
 
 install_packages() {
-    echo "\e[32mInstalling packages\e[0m"
+    echo -e "\e[32mInstalling packages\e[0m"
 
     # VIM
     install_pkg neovim
@@ -343,13 +344,14 @@ install_gui() {
     "debian")
         install_pkg i3
         install_pkg chromium-browser
-        sudo ln -sf /usr/bin/chromium-browser /usr/bin/chromium
+        install_pkg chromium
+        [ ! -f "/usr/bin/chromium" ] && sudo ln -sf "/usr/bin/chromium-browser" "/usr/bin/chromium"
         /usr/bin/env python3 -m pip install pywal
         # NETWORK
         install_pkg tigervnc-viewer
         ;;
     esac
-
+    install_pkg imagemagick
     install_pkg i3blocks
     install_pkg i3lock
     install_pkg i3status
@@ -447,9 +449,11 @@ install_code() {
     install_pkg npm
     install_pkg python
     install_pkg python-pip
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >/tmp/rustup.sh
-    yes '' | bash /tmp/rustup.sh
-    rm /tmp/rustup.sh
+    if [ ! -x "$(command -v rustup)" ]; then
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >/tmp/rustup.sh
+        yes '' | bash /tmp/rustup.sh
+        rm /tmp/rustup.sh
+    fi
 
     # PROGRAMMING UTILITES
     install_pkg valgrind
