@@ -4,10 +4,8 @@ Automated script to install all my preferred applications and copy over configur
 
 ## Scripts
 
-`autoinstall.sh` installs everything that doesn't require a GUI to run and also creates symlinks for all required config and dotfiles.
+`autoinstall.sh` sets up a debian or arch based distro with my personal ui and configuration files and other dotfiles. Optionally installs i3-gaps(for arch) or i3wm(for debian) and programming related toolchains, package managers and editors
 
-`autoinstallgui.sh` installs i3 window manager and rest of the programs that require GUI to run, like a web browser and file manager.
+`autoinstalldo.sh` installs basic configurations and programs for Digital Ocean droplets
 
-`autoinstallcode.sh` installs programming related stuff like different languages and their toolchains, IDE's, code editors
-
-`autoinstallvbox.sh` installs required VirtualBox packages if the installation is running in a VM
+`autoinstallvbox.sh` installs recommended VirtualBox packages if the installation is running in a VM
