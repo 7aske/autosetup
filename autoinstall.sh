@@ -12,7 +12,7 @@ config_package_manager() {
     if [ -f "/etc/os-release" ]; then
         source "/etc/os-release"
     else
-        echo "Unable to get os distribution"
+        echo -e "\e[1;31mUnable to get os distribution\e[0m"
         exit 1
     fi
 
@@ -42,7 +42,7 @@ config_package_manager() {
         esac
         DISTRO="$ID"
     else
-        echo "Unable to get os distribution"
+        echo -e "\e[1;31mUnable to get os distribution\e[0m"
         exit 1
     fi
 
@@ -300,9 +300,9 @@ install_i3_al() {
     # i3_alternating layout
     TMP_DIR=/tmp/i3-alternating-layout
     AL_DIR="$HOME/.local/bin"
-    [ -f "$AL_DIR/alternating_layouts" ] && echo -e "\e[1;33m'alternating-layouts' already installed" && return
+    [ -f "$AL_DIR/alternating_layouts" ] && echo -e "\e[33m'alternating-layouts' already installe\e[0m" && return
     [ -d "$AL_DIR" ] || mkdir -p "$AL_DIR"
-    /usr/bin/env python3 -m pip install i3-py
+    sudo /usr/bin/env python3 -m pip install i3-py
     install_pkg xorg-util-macros
     git -C /tmp clone "https://github.com/olemartinorg/i3-alternating-layout" && cp "$TMP_DIR/alternating_layouts.py" "$AL_DIR/alternating_layouts" && rm -rf "$TMP_DIR"
 
@@ -346,7 +346,7 @@ install_gui() {
         install_pkg chromium-browser
         install_pkg chromium
         [ ! -f "/usr/bin/chromium" ] && sudo ln -sf "/usr/bin/chromium-browser" "/usr/bin/chromium"
-        /usr/bin/env python3 -m pip install pywal
+        sudo /usr/bin/env python3 -m pip install pywal
         # NETWORK
         install_pkg tigervnc-viewer
         ;;
