@@ -39,6 +39,10 @@ config_package_manager() {
             PKG_MAN="apt"
             config_deb
             ;;
+        "void")
+            PKG_MAN="xbps"
+            config_void
+            ;;
         esac
         DISTRO="$ID"
     else
@@ -55,25 +59,30 @@ config_package_manager() {
         PKG_INST="pacman --noconfirm -Sq"
         PKG_INST_EXTRA="yay -Sq"
         ;;
+    "xbps")
+        PKG_INST="xbps-install"
+        PKG_INST_EXTRA=""
+        ;;
     esac
 }
 
 check_pkg() {
     case "$DISTRO" in
     "arch")
-        yay -Qq | grep -q "$1"
-
+        yay -Qq "$1" 2>/dev/null
         ;;
-
     "debian")
         dpkg --get-selections | grep -q "$1"
+        ;;
+    "void")
+        xbps-query -S "$1" >/dev/null 2>&1
         ;;
     esac
 }
 
 install_pkg() {
     if [ -z "$PKG_INST" ]; then
-        echo "\e[1;31No package manager specified\e[0"
+        echo -e "\e[1;31mNo package manager specified\e[0m"
         exit 1
     fi
     if [ -z "$1" ]; then
@@ -86,6 +95,27 @@ install_pkg() {
         echo -e "\e[32mInstalling package '$1'\e[0m"
         yes | sudo $PKG_INST "$1"
     fi
+}
+
+service_enable() {
+    if [ -z "$1" ]; then
+        echo -e "\e[1;31mNo service specified\e[0m"
+        return
+    fi
+    case "$DISTRO" in
+    "arch")
+        sudo systemctl enable "$1"
+        sudo systemctl start "$1"
+        ;;
+    "debian")
+        sudo systemctl enable "$1"
+        sudo systemctl start "$1"
+        ;;
+    "void")
+        [ ! -e "/var/service/$1" ] && sudo ln -s /etc/sv/"$1" /var/service/
+        sudo sv up "$1"
+        ;;
+    esac
 }
 
 install_pkg_extra() {
@@ -103,7 +133,7 @@ install_pkg_extra() {
         echo -e "\e[32mInstalling package '$1'\e[0m"
         if [ "$DISTRO" = "arch" ]; then
             yes | $PKG_INST_EXTRA "$1"
-        else
+        elif [ "$DISTRO" = "debian" ]; then
             yes | sudo $PKG_INST_EXTRA "$1"
         fi
     fi
@@ -128,6 +158,10 @@ config_deb() {
     yes | sudo apt -qq upgrade
 
     yes | sudo apt -qq install snapd
+}
+
+config_void() {
+    yes | sudo xbps-install -Su
 }
 
 config_dotfiles() {
@@ -240,6 +274,14 @@ install_packages() {
         install_pkg networkmanager
         install_pkg python
         install_pkg python-pip
+        install_pkg python-pipenv
+        ;;
+    "void")
+        install_pkg cronie
+        install_pkg openssh
+        install_pkg NetworkManager
+        install_pkg python3
+        install_pkg python3-pip
         ;;
     "debian")
         install_pkg cron
@@ -254,9 +296,9 @@ install_packages() {
     # FILE BROWSER
     install_pkg ranger
 
-    # Systemd services
-    sudo systemctl enable NetworkManager
-    sudo systemctl enable sshd
+    # services
+    service_enable NetworkManager
+    service_enable sshd
 }
 
 #   __    __  ____   _    ____ _  __    _    ____ _____ ____   __
@@ -325,7 +367,9 @@ install_gui() {
 
     # X
     install_pkg xorg
-    install_pkg xorg-xinit
+    if [ "$DISTRO" = "arch" ]; then
+        install_pkg xorg-xinit
+    fi
     install_pkg lightdm-gtk-greeter
     install_pkg lightdm-gtk-greeter-settings
 
@@ -341,6 +385,15 @@ install_gui() {
         # NETWORK
         install_pkg tigervnc
         ;;
+    "void")
+        install_pkg i3-gaps
+        install_pkg chromium
+        install_pkg pywal
+        install_pkg network-manager-applet
+
+        # NETWORK
+        install_pkg tigervnc
+        ;;
     "debian")
         install_pkg i3
         install_pkg chromium-browser
@@ -351,7 +404,12 @@ install_gui() {
         install_pkg tigervnc-viewer
         ;;
     esac
-    install_pkg imagemagick
+
+    if [ "$DISTRO" = "void" ]; then
+        install_pkg ImageMagick
+    else
+        install_pkg imagemagick
+    fi
     install_pkg i3blocks
     install_pkg i3lock
     install_pkg i3status
@@ -383,6 +441,17 @@ install_gui() {
         install_pkg arc-gtk-theme
         install_pkg_extra xcursor-breeze
         ;;
+    "void")
+        # FONTS
+        install_pkg ttf-ubuntu-font-family
+        install_pkg font-firacode
+        install_pkg liberation-fonts-ttf
+        install_pkg noto-fonts-ttf
+        install_pkg noto-fonts-emoji
+
+        install_pkg arc-theme
+        install_pkg breeze-cursor
+        ;;
     "debian")
         install_pkg fonts-firacode
         install_pkg fonts-ubuntu
@@ -396,7 +465,9 @@ install_gui() {
 
     # install_pkg papirus-icon-theme
     install_pkg lxappearance
-    curl https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/install.sh | sh
+    if [ ! -x "$(command -v papirus-folders)" ]; then
+        curl https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/install.sh | sh
+    fi
 
     # UTILITY
     install_pkg baobab
@@ -410,7 +481,11 @@ install_gui() {
     # install_pkg plank
 
     # FILE MANAGER
-    install_pkg thunar
+    if [ "$DISTRO" = "void" ]; then
+        install_pkg Thunar
+    else
+        install_pkg thunar
+    fi
     install_pkg nautilus
     # install_pkg gvfs
     # install_pkg gvfs-smb
@@ -446,7 +521,9 @@ install_code() {
         ;;
     esac
     install_pkg nodejs
-    install_pkg npm
+    if [ ! "$DISTRO" = "void" ]; then
+        install_pkg npm
+    fi
     install_pkg python
     install_pkg python-pip
     if [ ! -x "$(command -v rustup)" ]; then
@@ -470,11 +547,28 @@ install_code() {
     "debian")
         install_pkg_extra code-insiders
         ;;
+    "void")
+        install_pkg vscode
+        ;;
     esac
 
     # DATABASES
     # yes '' | yay -S mongodb-bin
-    # install_pkg mariadb
+    case "$DISTRO" in
+    "arch")
+        # install_pkg mariadb
+        ;;
+    "debian")
+        # install_pkg mariadb-client
+        # install_pkg mariadb-server
+        ;;
+
+    "void")
+        # install_pkg mariadb
+        # install_pkg mariadb-client
+        ;;
+
+    esac
 
 }
 
