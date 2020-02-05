@@ -208,8 +208,9 @@ config_profile() {
 
     EDITOR_VAR="export EDITOR=/usr/bin/nvim"
     BROWSER_VAR="export BROWSER=/usr/bin/chromium"
-    FILE_VAR="export FILE=/usr/bin/thunar"
+    FILE_VAR="export FILE=/usr/bin/nautilus"
     READER_VAR="export READER=/usr/bin/zathura"
+    CODE_VAR="export CODE=$HOME/Code"
 
     SCRIPTS="export PATH=\"\$PATH\":\"\$HOME\"/.scripts"
     UTILS_PY="export PATH=\"\$PATH\":\"\$HOME\"/Code/py/utils-py"
@@ -221,12 +222,18 @@ config_profile() {
     if ! grep -q "$BROWSER_VAR" "$PROFILE"; then echo "$BROWSER_VAR" >>"$PROFILE"; fi
     if ! grep -q "$FILE_VAR" "$PROFILE"; then echo "$FILE_VAR" >>"$PROFILE"; fi
     if ! grep -q "$READER_VAR" "$PROFILE"; then echo "$READER_VAR" >>"$PROFILE"; fi
+    if ! grep -q "$CODE_VAR" "$PROFILE"; then echo "$CODE_VAR" >>"$PROFILE"; fi
 
     if ! grep -q "$SCRIPTS" "$PROFILE"; then echo "$SCRIPTS" >>"$PROFILE"; fi
     if ! grep -q "$UTILS_PY" "$PROFILE"; then echo "$UTILS_PY" >>"$PROFILE"; fi
     if ! grep -q "$LOCAL_BIN" "$PROFILE"; then echo "$LOCAL_BIN" >>"$PROFILE"; fi
     if ! grep -q "$CARGO_BIN" "$PROFILE"; then echo "$CARGO_BIN" >>"$PROFILE"; fi
     if ! grep -q "$GO_PATH" "$PROFILE"; then echo "$GO_PATH" >>"$PROFILE"; fi
+
+    if [ ! -f "$HOME/.xprofile" ];then 
+        echo "[ -f \"\$HOME/.profile\" ] && . \"\$HOME/.profile\"" > "$HOME/.xprofile"
+        chmod u+x "$HOME/.xprofile"
+    fi
 
     # Set terminal colors from ~/.Xresources
     cp "$HOME"/Code/sh/dotfiles/.Xresources "$HOME/"
