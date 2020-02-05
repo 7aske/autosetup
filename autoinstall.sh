@@ -132,7 +132,7 @@ install_pkg_extra() {
     else
         echo -e "\e[32mInstalling package '$1'\e[0m"
         if [ "$DISTRO" = "arch" ]; then
-            yes | $PKG_INST_EXTRA "$1"
+            yes '' | $PKG_INST_EXTRA "$1"
         elif [ "$DISTRO" = "debian" ]; then
             yes | sudo $PKG_INST_EXTRA "$1"
         fi
