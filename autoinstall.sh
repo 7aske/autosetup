@@ -210,7 +210,8 @@ config_profile() {
     BROWSER_VAR="export BROWSER=/usr/bin/chromium"
     FILE_VAR="export FILE=/usr/bin/nautilus"
     READER_VAR="export READER=/usr/bin/zathura"
-    CODE_VAR="export CODE=$HOME/Code"
+    PLAYER_VAR="export PLAYER=spotify"
+    CODE_VAR="export CODE=\"\$HOME/Code\""
 
     SCRIPTS="export PATH=\"\$PATH\":\"\$HOME\"/.scripts"
     UTILS_PY="export PATH=\"\$PATH\":\"\$HOME\"/Code/py/utils-py"
@@ -222,6 +223,7 @@ config_profile() {
     if ! grep -q "$BROWSER_VAR" "$PROFILE"; then echo "$BROWSER_VAR" >>"$PROFILE"; fi
     if ! grep -q "$FILE_VAR" "$PROFILE"; then echo "$FILE_VAR" >>"$PROFILE"; fi
     if ! grep -q "$READER_VAR" "$PROFILE"; then echo "$READER_VAR" >>"$PROFILE"; fi
+    if ! grep -q "$PLAYER_VAR" "$PROFILE"; then echo "$PLAYER_VAR" >>"$PROFILE"; fi
     if ! grep -q "$CODE_VAR" "$PROFILE"; then echo "$CODE_VAR" >>"$PROFILE"; fi
 
     if ! grep -q "$SCRIPTS" "$PROFILE"; then echo "$SCRIPTS" >>"$PROFILE"; fi
@@ -447,6 +449,8 @@ install_gui() {
         install_pkg noto-fonts-emoji
         install_pkg arc-gtk-theme
         install_pkg_extra xcursor-breeze
+        install_pkg clipmenu
+        install_pkg clipnotify
         ;;
     "void")
         # FONTS
@@ -485,7 +489,6 @@ install_gui() {
     install_pkg gnome-disk-utility
     # yes '' | yay -S barrier
     # install_pkg conky
-    # install_pkg plank
 
     # FILE MANAGER
     if [ "$DISTRO" = "void" ]; then
