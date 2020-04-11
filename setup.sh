@@ -308,7 +308,7 @@ configure_profile() {
     profile_source="[ -f \"\$HOME/Code/sh/dotfiles/.profile\" ] && . \"\$HOME/Code/sh/dotfiles/.profile\""
 
     if [ ! -e "$profile" ]; then
-        echo "$home_profile_source" >"$profile"
+        echo "$profile_source" >"$profile"
     else
         if ! grep -q "$home_profile_source" "$profile"; then echo "$home_profile_source" >>"$profile"; fi
     fi
@@ -434,11 +434,11 @@ verify_prereq() {
 }
 configure_pman
 
-# verify_prereq
-# configure_dotfiles
-# configure_profile
-# configure_xprofile
-# configure_xinitrc
+verify_prereq
+configure_dotfiles
+configure_profile
+configure_xprofile
+configure_xinitrc
 
 read -r -p "Do you want to install packages (y\n)? " answ
 
