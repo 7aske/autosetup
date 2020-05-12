@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+export CODE="$HOME/.local/src"
+
+prog="$(basename "$0")"
+
 declare distro
 declare pman
 declare pman_extra
@@ -9,9 +13,9 @@ declare pman_cmd_extra
 declare pman_search_cmd_extra
 declare pman_check_cmd
 
+# commands required to complete the setup
 prereq=(git sed grep curl)
 
-prog="$(basename "$0")"
 
 declare -a arch_packages=(
     "neovim"
@@ -64,7 +68,6 @@ declare -a debian_packages=(
     "python3-virtualenv"
     "ranger"
 )
-
 # pamac-aur
 declare -a arch_gui_packages=(
     "xorg"
@@ -116,7 +119,7 @@ declare -a debian_gui_packages=(
     "kitty"
     "network-manager-gnome"
     "imagemagick"
-    "sxiv."
+    "sxiv"
     "i3blocks"
     "i3lock"
     "i3status"
@@ -134,7 +137,6 @@ declare -a debian_gui_packages=(
     "pasystray"
     "lxappearance"
     "baobab"
-    # "pandoc"
     "xclip"
     "feh"
     "zathura"
@@ -249,63 +251,40 @@ check_pkg() {
     esac
 }
 
-install_dotfile() {
-    [ ! $# -eq 2 ] && return 2
-    [ ! -e "$1" ] && return 2
-    echo -e "\e[32m$prog: installing '$(basename "$1")' config\e[0m"
-    if [ -e "$2" ] && [ ! -L "$2" ]; then
-        mv "$2" "$2.bak"
-        ln -s "$1" "$2"
-    elif [ ! -e "$2" ]; then
-        ln -s "$1" "$2"
-    fi
-}
+# install_dotfile() {
+#     [ ! $# -eq 2 ] && return 2
+#     [ ! -e "$1" ] && return 2
+#     echo -e "\e[32m$prog: installing '$(basename "$1")' config\e[0m"
+#     if [ -e "$2" ] && [ ! -L "$2" ]; then
+#         mv "$2" "$2.bak"
+#         ln -s "$1" "$2"
+#     elif [ ! -e "$2" ]; then
+#         ln -s "$1" "$2"
+#     fi
+# }
 
 configure_dotfiles() {
     echo -e "\e[32m$prog: installing dotfiles\e[0m"
-    dotfiles_dir="$HOME/Code/sh/dotfiles"
-    config_dir="$HOME/.config"
-    [ ! -e "$HOME/Code/sh" ] && mkdir -p "$HOME/Code/sh"
-    [ ! -e "$config_dir" ] && mkdir -p "$config_dir"
+
+    [ ! -e "$CODE/sh" ] && mkdir -p "$CODE/sh"
 
     # Clone all personal repositories
-    [ ! -e "$HOME/Code/sh/utils-sh" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/utils-sh"
-    [ ! -e "$HOME/Code/sh/scripts" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/scripts"
-    [ ! -e "$HOME/Code/sh/bashrc" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/bashrc"
-    [ ! -e "$HOME/Code/sh/dotfiles" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/dotfiles"
+    [ ! -e "$CODE/sh/scripts" ] && git -C "$CODE/sh" clone "https://github.com/7aske/scripts"
+    [ ! -e "$CODE/sh/bashrc" ] && git -C "$CODE/sh" clone "https://github.com/7aske/bashrc"
+    [ ! -e "$CODE/sh/dotfiles" ] && git -C "$CODE/sh" clone "https://github.com/7aske/dotfiles"
 
-    # Set ~/.bashrc to source ~/Code/sh/bashrc/.bashrc
-    bash "$HOME/Code/sh/bashrc/bashrc.sh"
+    # Set ~/.bashrc to source $CODE/sh/bashrc/.bashrc
+    bash "$CODE/sh/bashrc/bashrc.sh"
 
-    # Setup links to respective dotfiles into .config
-    mkdir -p "$config_dir/VSCodium/User"
-    mkdir -p "$config_dir/VSCode/User"
-
-    install_dotfile "$dotfiles_dir/VSCodium/User/settings.json" "$config_dir/VSCodium/User/settings.json"
-    install_dotfile "$dotfiles_dir/VSCode/User/settings.json" "$config_dir/VSCode/User/settings.json"
-    install_dotfile "$dotfiles_dir/VSCodium/User/keybindings.json" "$config_dir/VSCodium/User/keybindings.json"
-    install_dotfile "$dotfiles_dir/VSCode/User/keybindings.json" "$config_dir/VSCode/User/keybindings.json"
-    install_dotfile "$dotfiles_dir/albert" "$config_dir/albert"
-    install_dotfile "$dotfiles_dir/neofetch" "$config_dir/neofetch"
-    install_dotfile "$dotfiles_dir/kitty" "$config_dir/kitty"
-    install_dotfile "$dotfiles_dir/nvim" "$config_dir/nvim"
-    install_dotfile "$dotfiles_dir/rofi" "$config_dir/rofi"
-    install_dotfile "$dotfiles_dir/wal" "$config_dir/wal"
-    install_dotfile "$dotfiles_dir/tmux" "$config_dir/tmux"
-    install_dotfile "$dotfiles_dir/i3" "$config_dir/i3"
-    install_dotfile "$dotfiles_dir/i3blocks" "$config_dir/i3blocks"
-    install_dotfile "$dotfiles_dir/i3status" "$config_dir/i3status"
-    install_dotfile "$dotfiles_dir/dunst" "$config_dir/dunst"
-    install_dotfile "$dotfiles_dir/conky" "$config_dir/conky"
-
-    [ ! -e "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
-    cd "$HOME/Code/sh/scripts" && make
+    # install scripts
+    cd "$CODE/sh/scripts" && make
 }
 
 configure_profile() {
     echo -e "\e[32m$prog: configuring .profile\e[0m"
+
     profile="$HOME/.profile"
-    profile_source="[ -f \"\$HOME/Code/sh/dotfiles/.profile\" ] && . \"\$HOME/Code/sh/dotfiles/.profile\""
+    profile_source="[ -f \"\$HOME/.local/src/sh/dotfiles/.profile\" ] && . \"\$HOME/.local/src/sh/dotfiles/.profile\""
 
     if [ ! -e "$profile" ]; then
         echo "$profile_source" >"$profile"
@@ -316,10 +295,11 @@ configure_profile() {
 
 configure_xprofile() {
     echo -e "\e[32m$prog: configuring .xprofile\e[0m"
+
     xprofile="$HOME/.xprofile"
     home_profile_source="[ -f \"\$HOME/.profile\" ] && . \"\$HOME/.profile\""
-    profile_source="[ -f \"\$HOME/Code/sh/dotfiles/.profile\" ] && . \"\$HOME/Code/sh/dotfiles/.profile\""
-    xprofile_source="[ -f \"\$HOME/Code/sh/dotfiles/.xprofile\" ] && . \"\$HOME/Code/sh/dotfiles/.xprofile\""
+    profile_source="[ -f \"\$HOME/.local/src/sh/dotfiles/.profile\" ] && . \"\$HOME/.local/src/sh/dotfiles/.profile\""
+    xprofile_source="[ -f \"\$HOME/.local/src/sh/dotfiles/.xprofile\" ] && . \"\$HOME/.local/src/sh/dotfiles/.xprofile\""
 
     if [ ! -e "$profile" ]; then
         echo -e "$home_profile_source\n$profile_source\n$xprofile_source" >"$profile"
@@ -394,9 +374,9 @@ exec \$(get_session)
 
     if [ -e "$HOME/.Xresources" ]; then
         mv "$HOME/.Xresources" "$HOME/.Xresources.bak"
-        cp "$HOME/Code/sh/dotfiles/.Xresources" "$HOME/"
+        cp "$CODE/sh/dotfiles/.Xresources" "$HOME/"
     else
-        cp "$HOME/Code/sh/dotfiles/.Xresources" "$HOME/"
+        cp "$CODE/sh/dotfiles/.Xresources" "$HOME/"
     fi
 }
 
@@ -407,7 +387,9 @@ is_installed() {
 install_pkg() {
     [ -z "$pman_cmd" ] && echo -e "\e[31m$prog: 'pman_cmd' not defined\e[0m" && exit 1
     [ -z "$1" ] && echo "\e[31m$prog: package not specified\e[0m" && return 1
+
     echo -e "\e[32m$prog: installing package '$1'\e[0m"
+
     if [ $UID -eq 0 ]; then
         eval "$pman_cmd $1"
     else
@@ -417,6 +399,7 @@ install_pkg() {
 
 install_pkgs() {
     [ -z "$1" ] && return
+
     # shellcheck disable=SC1087
     for pkg in $(eval "echo \${$1[@]}"); do
         if ! is_installed "$pkg"; then
