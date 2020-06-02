@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+export CODE="$HOME/.local/src"
+
+prog="$(basename "$0")"
+
 declare distro
 declare pman
 declare pman_extra
@@ -9,9 +13,9 @@ declare pman_cmd_extra
 declare pman_search_cmd_extra
 declare pman_check_cmd
 
+# commands required to complete the setup
 prereq=(git sed grep curl)
 
-prog="$(basename "$0")"
 
 declare -a arch_packages=(
     "zsh"
@@ -64,7 +68,6 @@ declare -a debian_packages=(
     "python3-virtualenv"
     "ranger"
 )
-
 # pamac-aur
 declare -a arch_gui_packages=(
     "xorg"
@@ -114,7 +117,7 @@ declare -a debian_gui_packages=(
     "kitty"
     "network-manager-gnome"
     "imagemagick"
-    "sxiv."
+    "sxiv"
     "i3blocks"
     "i3lock"
     "i3status"
@@ -132,7 +135,6 @@ declare -a debian_gui_packages=(
     "pasystray"
     "lxappearance"
     "baobab"
-    # "pandoc"
     "xclip"
     "feh"
     "zathura"
@@ -341,7 +343,9 @@ is_installed() {
 install_pkg() {
     [ -z "$pman_cmd" ] && echo -e "\e[31m$prog: 'pman_cmd' not defined\e[0m" && exit 1
     [ -z "$1" ] && echo "\e[31m$prog: package not specified\e[0m" && return 1
+
     echo -e "\e[32m$prog: installing package '$1'\e[0m"
+
     if [ $UID -eq 0 ]; then
         eval "$pman_cmd $1"
     else
@@ -351,6 +355,7 @@ install_pkg() {
 
 install_pkgs() {
     [ -z "$1" ] && return
+
     # shellcheck disable=SC1087
     for pkg in $(eval "echo \${$1[@]}"); do
         if ! is_installed "$pkg"; then
