@@ -14,13 +14,13 @@ prereq=(git sed grep curl)
 prog="$(basename "$0")"
 
 declare -a arch_packages=(
+    "zsh"
     "neovim"
     "net-tools"
     "nmap"
     "curl"
     "wget"
     "vsftpd"
-    "rxvt-unicode"
     "xterm"
     "neofetch"
     "tree"
@@ -40,12 +40,12 @@ declare -a arch_packages=(
 )
 declare -a debian_packages=(
     "neovim"
+    "zsh"
     "net-tools"
     "nmap"
     "curl"
     "wget"
     "vsftpd"
-    "rxvt-unicode"
     "xterm"
     "neofetch"
     "tree"
@@ -69,9 +69,8 @@ declare -a debian_packages=(
 declare -a arch_gui_packages=(
     "xorg"
     "xorg-xinit"
-    "lightdm-gtk-greeter"
-    "lightdm-gtk-greeter-settings"
     "i3-gaps"
+    "sddm"
     "chromium"
     "python-pywal"
     "sxiv"
@@ -89,7 +88,7 @@ declare -a arch_gui_packages=(
     "dmenu"
     "fzf"
     "xautolock"
-    "compton"
+    "picom"
     "xfce4-power-manager"
     "playerctl"
     "pulseaudio"
@@ -104,12 +103,11 @@ declare -a arch_gui_packages=(
     "gnome-disk-utility"
     "nautilus"
 )
-# pywal
+
 declare -a debian_gui_packages=(
     "xorg"
     "xorg-xinit"
-    "lightdm-gtk-greeter"
-    "lightdm-gtk-greeter-settings"
+    "sddm"
     "i3"
     "chromium"
     "tigervnc-viewer"
@@ -249,87 +247,29 @@ check_pkg() {
     esac
 }
 
-install_dotfile() {
-    [ ! $# -eq 2 ] && return 2
-    [ ! -e "$1" ] && return 2
-    echo -e "\e[32m$prog: installing '$(basename "$1")' config\e[0m"
-    if [ -e "$2" ] && [ ! -L "$2" ]; then
-        mv "$2" "$2.bak"
-        ln -s "$1" "$2"
-    elif [ ! -e "$2" ]; then
-        ln -s "$1" "$2"
-    fi
-}
-
 configure_dotfiles() {
     echo -e "\e[32m$prog: installing dotfiles\e[0m"
-    dotfiles_dir="$HOME/Code/sh/dotfiles"
+    dotfiles_dir="$HOME/.local/src/sh/dotfiles"
     config_dir="$HOME/.config"
-    [ ! -e "$HOME/Code/sh" ] && mkdir -p "$HOME/Code/sh"
+    [ ! -e "$HOME/.local/src/sh" ] && mkdir -p "$HOME/Code/sh"
     [ ! -e "$config_dir" ] && mkdir -p "$config_dir"
 
     # Clone all personal repositories
-    [ ! -e "$HOME/Code/sh/utils-sh" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/utils-sh"
-    [ ! -e "$HOME/Code/sh/scripts" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/scripts"
-    [ ! -e "$HOME/Code/sh/bashrc" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/bashrc"
-    [ ! -e "$HOME/Code/sh/dotfiles" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/dotfiles"
-
-    # Set ~/.bashrc to source ~/Code/sh/bashrc/.bashrc
-    bash "$HOME/Code/sh/bashrc/bashrc.sh"
+    [ ! -e "$HOME/.local/src/sh/scripts" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/scripts"
+    [ ! -e "$HOME/.local/src/sh/dotfiles" ] && git -C "$HOME/Code/sh" clone "https://github.com/7aske/dotfiles"
 
     # Setup links to respective dotfiles into .config
     mkdir -p "$config_dir/VSCodium/User"
     mkdir -p "$config_dir/VSCode/User"
 
-    install_dotfile "$dotfiles_dir/VSCodium/User/settings.json" "$config_dir/VSCodium/User/settings.json"
-    install_dotfile "$dotfiles_dir/VSCode/User/settings.json" "$config_dir/VSCode/User/settings.json"
-    install_dotfile "$dotfiles_dir/VSCodium/User/keybindings.json" "$config_dir/VSCodium/User/keybindings.json"
-    install_dotfile "$dotfiles_dir/VSCode/User/keybindings.json" "$config_dir/VSCode/User/keybindings.json"
-    install_dotfile "$dotfiles_dir/albert" "$config_dir/albert"
-    install_dotfile "$dotfiles_dir/neofetch" "$config_dir/neofetch"
-    install_dotfile "$dotfiles_dir/kitty" "$config_dir/kitty"
-    install_dotfile "$dotfiles_dir/nvim" "$config_dir/nvim"
-    install_dotfile "$dotfiles_dir/rofi" "$config_dir/rofi"
-    install_dotfile "$dotfiles_dir/wal" "$config_dir/wal"
-    install_dotfile "$dotfiles_dir/tmux" "$config_dir/tmux"
-    install_dotfile "$dotfiles_dir/i3" "$config_dir/i3"
-    install_dotfile "$dotfiles_dir/i3blocks" "$config_dir/i3blocks"
-    install_dotfile "$dotfiles_dir/i3status" "$config_dir/i3status"
-    install_dotfile "$dotfiles_dir/dunst" "$config_dir/dunst"
-    install_dotfile "$dotfiles_dir/conky" "$config_dir/conky"
+    cd "$HOME/.local/src/sh/dotfiles" && bash ./install.sh && cd -
 
     [ ! -e "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
-    cd "$HOME/Code/sh/scripts" && make
+    cd "$HOME/Code/sh/scripts" && make && cd -
 }
 
-configure_profile() {
-    echo -e "\e[32m$prog: configuring .profile\e[0m"
-    profile="$HOME/.profile"
-    profile_source="[ -f \"\$HOME/Code/sh/dotfiles/.profile\" ] && . \"\$HOME/Code/sh/dotfiles/.profile\""
-
-    if [ ! -e "$profile" ]; then
-        echo "$profile_source" >"$profile"
-    else
-        if ! grep -q "$home_profile_source" "$profile"; then echo "$home_profile_source" >>"$profile"; fi
-    fi
-}
-
-configure_xprofile() {
-    echo -e "\e[32m$prog: configuring .xprofile\e[0m"
-    xprofile="$HOME/.xprofile"
-    home_profile_source="[ -f \"\$HOME/.profile\" ] && . \"\$HOME/.profile\""
-    profile_source="[ -f \"\$HOME/Code/sh/dotfiles/.profile\" ] && . \"\$HOME/Code/sh/dotfiles/.profile\""
-    xprofile_source="[ -f \"\$HOME/Code/sh/dotfiles/.xprofile\" ] && . \"\$HOME/Code/sh/dotfiles/.xprofile\""
-
-    if [ ! -e "$profile" ]; then
-        echo -e "$home_profile_source\n$profile_source\n$xprofile_source" >"$profile"
-    else
-        if ! grep -q "$home_profile_source" "$xprofile"; then echo "$home_profile_source" >>"$xprofile"; fi
-        if ! grep -q "$profile_source" "$xprofile"; then echo "$profile_source" >>"$xprofile"; fi
-        if ! grep -q "$xprofile_source" "$xprofile"; then echo "$xprofile_source" >>"$xprofile"; fi
-    fi
-}
 configure_xinitrc() {
+
     echo -e "\e[32m$prog: configuring .xinitrc\e[0m"
     xinitrc="
 #!/bin/sh
@@ -374,6 +314,7 @@ get_session(){
 		fluxbox) dbus_args+=(startfluxbox) ;;
 		gnome) dbus_args+=(gnome-session) ;;
 		i3|i3wm) dbus_args+=(i3 --shmlog-size 0) ;;
+		dwm) dbus_args+=(dwm) ;;
 		jwm) dbus_args+=(jwm) ;;
 		kde) dbus_args+=(startkde) ;;
 		lxde) dbus_args+=(startlxde) ;;
@@ -391,13 +332,6 @@ exec \$(get_session)
 "
 
     echo "$xinitrc" >~/.xinitrc
-
-    if [ -e "$HOME/.Xresources" ]; then
-        mv "$HOME/.Xresources" "$HOME/.Xresources.bak"
-        cp "$HOME/Code/sh/dotfiles/.Xresources" "$HOME/"
-    else
-        cp "$HOME/Code/sh/dotfiles/.Xresources" "$HOME/"
-    fi
 }
 
 is_installed() {
@@ -432,13 +366,10 @@ verify_prereq() {
         is_installed "$p" || install_pkg "$p" || echo -e "\e[31m$prog: failed installing package '$p'\e[0m"
     done
 }
-configure_pman
 
+configure_pman
 verify_prereq
 configure_dotfiles
-configure_profile
-configure_xprofile
-configure_xinitrc
 
 read -r -p "Do you want to install packages (y\n)? " answ
 
