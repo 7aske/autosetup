@@ -41,6 +41,7 @@ declare -a arch_packages=(
     "python-pip"
     "python-virtualenv"
     "ranger"
+    "python-ueberzug"
 )
 declare -a debian_packages=(
     "neovim"
