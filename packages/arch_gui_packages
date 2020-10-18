@@ -14,6 +14,8 @@ gdm
 gnome-disk-utility
 gnome-font-viewer
 gnome-screensaver
+gvfs
+gvfs-smb
 i3-gaps
 i3blocks
 i3status
@@ -45,6 +47,8 @@ sshfs
 sxiv
 tigervnc
 udiskie
+unclutter
+wkhtmltopdf
 xclip
 xdotool
 xfburn

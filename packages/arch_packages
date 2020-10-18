@@ -40,6 +40,8 @@ playerctl
 python
 python-pip
 ueberzug
+unrar
+unzip
 python-virtualenv
 r
 ranger
@@ -47,6 +49,7 @@ ripgrep
 rsync
 rustup
 screen
+sshfs
 sysstat
 tmux
 tree
@@ -54,5 +57,4 @@ unrar
 valgrind
 vsftpd
 wget
-wkhtmltopdf
 zsh
