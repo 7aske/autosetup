@@ -16,5 +16,5 @@ function install_neovim(){
         make install
     cd -
     rm -rf "$TMP_DIR"
-    nvim +"PlugInstall" +qa
+    /usr/local/bin/nvim +"PlugInstall" +qa
 }
