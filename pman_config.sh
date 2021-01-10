@@ -48,7 +48,7 @@ install_pkgs() {
 }
 
 configure_pman(){
-  curl "https://www.archlinux.org/mirrorlist/all/" > /etc/pacman.d/mirrorlist
+  curl "https://archlinux.org/mirrorlist/all/" > /etc/pacman.d/mirrorlist
   sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist
   sed -i 's/^#Color/Color/' /etc/pacman.conf
   pacman -Syy
