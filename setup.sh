@@ -67,6 +67,7 @@ configure_xinitrc() {
 }
 
 configure_misc(){
+  cp $(pwd)/locale.conf /etc/locale.conf
   localectl set-locale LANG=en_US.UTF-8
   usermod -s /usr/bin/zsh "$USER"
   usermod -s /usr/bin/zsh "root"
@@ -76,9 +77,10 @@ configure_misc(){
   systemctl enable NetworkManager
   sudo -u "$USER" mkdir "$USERHOME/"{Downloads,Documents,Music,Pictures}
   sudo -u "$USER" mkdir "$USERHOME/Pictures/wallpaper"
-  sudo -u "$USER" curl -o "$USERHOME/Pictures/wallpaper/nord-peeks.png" "https://cdn.7aske.com/wall/nord-peeks.png"
+  #sudo -u "$USER" curl -o "$USERHOME/Pictures/wallpaper/nord-peeks.png" "https://cdn.7aske.com/wall/nord-peeks.png"
   sudo -u "$USER" rustup toolchain install stable
   sudo -u "$USER" rustup default stable
+  yes | sudo -u "$USER" yay -S libxft-bgra-git
 }
 
 if [ -f "/etc/os-release" ]; then
@@ -103,26 +105,19 @@ done
 
 configure_dotfiles "root"  "/root/.local/src" "/root" 
 configure_dotfiles "$USER" "$CODE"            "$USERHOME" 
+configure_xinitrc
 
-if _question "Do you want to install packages?"; then
-  install_pkgs "${DISTRO}_packages"
-fi
-
+update_pkglist
+install_pkgs "${DISTRO}_packages"
 install_neovim
-
-if _question "Do you want to install GUI?"; then
-  install_pkgs "${DISTRO}_gui_packages"
-  install_pkgs "${DISTRO}_font_packages"
-  configure_xinitrc
-  install_st
-  install_i3_alternating_layouts
-
-  if _question "Do you want to install extra packages?"; then
-    install_pman_extra "$USER"
-    install_pkgs_extra "${DISTRO}_extra_packages" "$USER"
-  fi
-
-fi
+install_pkgs "${DISTRO}_gui_packages"
+install_pkgs "${DISTRO}_font_packages"
+install_st
+install_i3_alternating_layouts
+update_pkgs
+install_pman_extra "$USER"
+curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import -
+install_pkgs_extra "${DISTRO}_extra_packages" "$USER"
 
 configure_misc
 

@@ -74,3 +74,11 @@ install_pman_extra(){
   rm -rf "$TMP_DIR"
   unset GOPATH
 }
+
+update_pkgs(){
+	pacman -Sqyyu --noconfirm
+}
+
+update_pkglist(){
+	pacman -Sqyy --noconfirm
+}

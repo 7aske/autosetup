@@ -12,7 +12,7 @@ function install_neovim(){
     TMP_DIR="/tmp/neovim"
     git -C /tmp clone "https://github.com/neovim/neovim" && 
         cd "$TMP_DIR/" &&
-        make &&
+        make CMAKE_BUILD_TYPE=Release &&
         make install
     cd -
     rm -rf "$TMP_DIR"

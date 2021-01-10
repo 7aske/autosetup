@@ -47,11 +47,9 @@ playerctl
 python
 python-pip
 ueberzug
-unrar
 unzip
 python-virtualenv
 ranger
-rar
 ripgrep
 rsync
 rustup
