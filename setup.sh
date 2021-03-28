@@ -9,6 +9,7 @@ source "$(pwd)/pman_config.sh"
 source "$(pwd)/packages/github/neovim.sh"
 source "$(pwd)/packages/github/i3-alternating-layouts.sh"
 source "$(pwd)/packages/github/st.sh"
+source "$(pwd)/packages/github/rgs.sh"
 
 if [ ! $UID -eq 0 ]; then
   _echo_red "$prog: run as root\n" && exit 2
@@ -111,13 +112,14 @@ update_pkglist
 install_pkgs "${DISTRO}_packages"
 install_neovim
 install_pkgs "${DISTRO}_gui_packages"
-install_pkgs "${DISTRO}_font_packages"
 install_st
 install_i3_alternating_layouts
+install_rgs
 update_pkgs
 install_pman_extra "$USER"
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import -
 install_pkgs_extra "${DISTRO}_extra_packages" "$USER"
+install_pkgs_extra "${DISTRO}_font_packages"
 
 configure_misc
 

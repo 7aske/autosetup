@@ -43,6 +43,7 @@ playerctl
 polkit-gnome
 pulseaudio
 python-pywal
+python-i3ipc
 qemu
 qt5ct
 rofi
