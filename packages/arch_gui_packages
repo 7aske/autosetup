@@ -2,16 +2,14 @@ arandr
 baobab
 cantata
 capitaine-cursors
-chromium
 clipmenu
 deluge
 dmenu
 dunst
 engrampa
+evolution
 feh
 ffmpeg
-filezilla
-firefox
 gdm
 gnome-disk-utility
 gnome-font-viewer
@@ -33,7 +31,6 @@ mpd
 mpv
 nautilus
 network-manager-applet
-pandoc
 papirus-icon-theme
 pasystray
 pavucontrol
@@ -43,7 +40,6 @@ playerctl
 polkit-gnome
 pulseaudio
 python-pywal
-python-i3ipc
 qemu
 qt5ct
 rofi

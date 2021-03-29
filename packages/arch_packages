@@ -1,5 +1,6 @@
 atool
 bat
+bc
 bridge-utils
 cifs-utils
 clang
@@ -23,7 +24,7 @@ highlight
 htop
 iperf
 jdk-openjdk
-jdk8-openjdk
+jdk11-openjdk
 jq
 lm_sensors
 make
@@ -57,7 +58,6 @@ screen
 sshfs
 sysstat
 tmux
-tomcat9
 tree
 unrar
 valgrind

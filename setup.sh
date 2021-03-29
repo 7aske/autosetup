@@ -3,13 +3,14 @@
 filename="$(basename "$0")"
 prog="${filename##*.}"
 
-source "$(pwd)/packages.sh"
-source "$(pwd)/utils.sh"
-source "$(pwd)/pman_config.sh"
-source "$(pwd)/packages/github/neovim.sh"
-source "$(pwd)/packages/github/i3-alternating-layouts.sh"
-source "$(pwd)/packages/github/st.sh"
-source "$(pwd)/packages/github/rgs.sh"
+ROOT_DIR="${ROOT_DIR:-"$(pwd)"}"
+
+source "$ROOT_DIR/utils.sh"
+source "$ROOT_DIR/pman_config.sh"
+source "$ROOT_DIR/packages/github/neovim.sh"
+source "$ROOT_DIR/packages/github/i3-alternating-layouts.sh"
+source "$ROOT_DIR/packages/github/st.sh"
+source "$ROOT_DIR/packages/github/rgs.sh"
 
 if [ ! $UID -eq 0 ]; then
   _echo_red "$prog: run as root\n" && exit 2
@@ -37,7 +38,7 @@ while getopts "u:h" arg; do
 done
 shift $((OPTIND-1))
 
-CODE="$USERHOME/.local/src"
+export CODE="$USERHOME/.local/src"
 
 configure_dotfiles() {
   # $1 USER
@@ -57,31 +58,28 @@ configure_dotfiles() {
 
     cd "$2/sh/dotfiles" && sudo -u "$1" make; cd -
     cd "$2/sh/scripts" && sudo -u "$1" make; cd -
+	cp -r $ROOT_DIR/config/* "$USERHOME/.config/"
 }
 
 configure_xinitrc() {
   _echo_green "$prog: configuring .xinitrc\n"
-  cp "$(pwd)/xinitrc" "$USERHOME/.xinitrc"
+  cp "$ROOT_DIR/xinitrc" "$USERHOME/.xinitrc"
   chown "$USER:$USER" "$USERHOME/.xinitrc"
   chmod 775 "$USERHOME/.xinitrc"
   chmod 775 "$USERHOME/.xprofile"
 }
 
 configure_misc(){
-  cp $(pwd)/locale.conf /etc/locale.conf
+  cp $ROOT_DIR/locale.conf /etc/locale.conf
   localectl set-locale LANG=en_US.UTF-8
-  usermod -s /usr/bin/zsh "$USER"
-  usermod -s /usr/bin/zsh "root"
+  [ -x '/usr/bin/zsh' ] && usermod -s /usr/bin/zsh "$USER"
+  [ -x '/usr/bin/zsh' ] && usermod -s /usr/bin/zsh "root"
   systemctl enable sshd
   systemctl enable gdm
   systemctl enable cronie
   systemctl enable NetworkManager
-  sudo -u "$USER" mkdir "$USERHOME/"{Downloads,Documents,Music,Pictures}
-  sudo -u "$USER" mkdir "$USERHOME/Pictures/wallpaper"
-  #sudo -u "$USER" curl -o "$USERHOME/Pictures/wallpaper/nord-peeks.png" "https://cdn.7aske.com/wall/nord-peeks.png"
-  sudo -u "$USER" rustup toolchain install stable
-  sudo -u "$USER" rustup default stable
-  yes | sudo -u "$USER" yay -S libxft-bgra-git
+  sudo -u "$USER" mkdir -p "$USERHOME/"{Downloads,Documents,Music,Pictures}
+  sudo -u "$USER" mkdir -p "$USERHOME/Pictures/wallpaper"
 }
 
 if [ -f "/etc/os-release" ]; then
@@ -92,34 +90,31 @@ else
   _echo_red "$prog: unable to get os distribution\n"; exit 1
 fi
 
-if ! id "$USER" 2>&1>/dev/null; then
-  _echo_red "$prog: user '$USER' does not exist\n"
-fi
-
 configure_pman
+install_pman_extra
+update_pkglist
+update_pkgs
 
 for p in "${prereq[@]}"; do
   if ! is_installed "$p"; then
-    install_pkg "$p" || _echo_red "$prog: failed installing package '$p'"
+	  install_pkg "$p" || ( _echo_red "$prog: failed installing package '$p'" && exit 1)
   fi
+
 done
 
 configure_dotfiles "root"  "/root/.local/src" "/root" 
 configure_dotfiles "$USER" "$CODE"            "$USERHOME" 
 configure_xinitrc
 
-update_pkglist
-install_pkgs "${DISTRO}_packages"
+install_pkgs "${ROOT_DIR}/packages/${DISTRO}_packages"
 install_neovim
-install_pkgs "${DISTRO}_gui_packages"
+install_pkgs "${ROOT_DIR}/packages/${DISTRO}_gui_packages"
 install_st
 install_i3_alternating_layouts
-install_rgs
-update_pkgs
-install_pman_extra "$USER"
+install_rgs "$USER"
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import -
-install_pkgs_extra "${DISTRO}_extra_packages" "$USER"
-install_pkgs_extra "${DISTRO}_font_packages"
+install_pkgs_extra "${ROOT_DIR}/packages/${DISTRO}_extra_packages" "$USER"
+install_pkgs_extra "${ROOT_DIR}/packages/${DISTRO}_font_packages"  "$USER"
 
 configure_misc
 

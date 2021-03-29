@@ -9,6 +9,7 @@ install_i3_alternating_layouts() {
     fi
     _echo_green "installing i3-alternating-layouts\n"
     python -m pip install i3-py
+    python -m pip install i3ipc
     TMP_DIR=/tmp/i3-alternating-layout
     git -C /tmp clone "https://github.com/olemartinorg/i3-alternating-layout" && 
         cp "$TMP_DIR/alternating_layouts.py" "/usr/bin/alternating_layouts"

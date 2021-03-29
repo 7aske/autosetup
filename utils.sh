@@ -6,8 +6,8 @@ YELLOW="\e[1;33m"
 ESC="\e[0m"
 
 function _echo_red()    { echo -e "$RED$1$ESC"; }
-function _echo_green()  { echo -e "$RED$1$ESC"; }
-function _echo_yellow() { echo -e "$RED$1$ESC"; }
+function _echo_green()  { echo -e "$GREEN$1$ESC"; }
+function _echo_yellow() { echo -e "$YELLOW$1$ESC"; }
 function is_installed() { test -n "$(command -v "$1")"; }
 
 function _question(){
