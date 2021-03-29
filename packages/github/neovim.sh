@@ -17,4 +17,7 @@ function install_neovim(){
     cd -
     rm -rf "$TMP_DIR"
     /usr/local/bin/nvim +"PlugInstall" +qa
+	if [ -n "$2" ]; then # user
+    	sudo -u "$2" /usr/local/bin/nvim +"PlugInstall" +qa
+	fi
 }
